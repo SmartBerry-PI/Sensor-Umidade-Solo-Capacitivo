@@ -1,6 +1,8 @@
-// declarando a porta do sensor
+// declarando a porta do sensor como uma variavel constante
 const int PINO_SENSOR_UMIDADE_SOLO = A0;
-
+// declarando variaveis  contastes para as metricas de minimo e maximo
+const float UmidadeMax = 75;
+const float UmidadeMin = 65;
 // função executada assim que o arduino ligar
 void setup() {
   //  taxa de velocidade de processamento entre o arduino  e a  máquina 
@@ -13,15 +15,21 @@ void setup() {
 void loop() {
   // variavel local do tipo inteiro que irá armazenar o dado coletado anteriormente pela porta A0
   int leituraSensor = analogRead(PINO_SENSOR_UMIDADE_SOLO);
-  // variavel local que ira armazenar o calulo da porcentagem da umidade do solo 
-  // float porcentagemUmidade = (leituraSensor *5 / 1023.0) * 100; ao fazer desta maneira quando o sensor entra
-  //em contato com a agua ao inves da umidade aumentar ela diminui
-  float porcentagemUmidade = (leituraSensor / 1023.0) * 100; // o sensor de solo capacitivo retorna um valor
-  //analogivo maior para solos umidos e menor para soloso secos lá encima o codigo esta invertendo os valorer 
+  // variavel local que ira armazenar o calulo da porcentagem da umidade do solo atual
+  // usando a função map para converter os valor maximo e minimo que o senor captura para o 
+  //intervalo de 0 a 100, colocando o 100 na frente para inverter os valores 
+  float porcentagemUmidade = map(leituraSensor, 0.0, 1023.0, 100.0, 0.0);
   // imprimindo o calculo  feito anteriormente na tela 
-  Serial.print("Umidade do Solo: ");
+  // Serial.print("Umidade do Solo: ");
+  Serial.print("UmidadeAtual:");
   Serial.print(porcentagemUmidade);
-  Serial.println(" %");
+  Serial.print(" ");
+  Serial.print("Encharcamento:");
+  Serial.print(UmidadeMax);
+  Serial.print(" ");
+  Serial.print("EstresseHidrico:");
+  Serial.print(UmidadeMin);
+  Serial.println(" ");
 
   // o tempo da espera de um segundo para repetir o loop 
   delay(1000);
